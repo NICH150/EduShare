@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduShare — Withdrawal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../style/withdrawal.css" />
+<script defer src="../script/withdrawal.js"></script>
+</head>
+<body>
+
+<nav class="desktop-nav">
+  <span class="nav-logo">EduShare</span>
+  <ul class="nav-links">
+    <li><a href="upload.html">Upload</a></li>
+    <li><a href="index.html">Dashboard</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="topup.html" class="coin-badge text-decor-none">
+        <div class="coin-dot"></div>
+        <span id="nav-coins">25 Coins</span>
+    </a>
+    <div class="avatar">
+      <svg width="18" height="18" fill="none" stroke="#6b7280" stroke-width="2" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="18" height="18" rx="3"/>
+        <line x1="9" y1="9" x2="15" y2="9"/>
+        <line x1="9" y1="12" x2="15" y2="12"/>
+        <line x1="9" y1="15" x2="13" y2="15"/>
+      </svg>
+    </div>
+  </div>
+</nav>
+
+<main class="page">
+
+    <div class="left-col">
+
+        <div class="balance-card">
+            <p class="balance-label">Available Balance</p>
+            <div class="balance-amount">
+            <span class="coin-icon-lg">
+                <div class="coin-dot"></div>
+            </span>
+            <span class="balance-number" id="balance-number">25</span>
+            <span class="balance-number">Coins</span>
+            </div>
+            <div class="balance-info">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span >Estimated value: <strong id="estimated-value">Rp 2500,00</strong> (1 Coin = Rp 100)</span>
+            </div>
+        </div>
+
+        <div class="withdraw-section">
+            <h2 class="section-title">Amount to Withdraw</h2>
+            <div class="input-wrapper">
+                <label class="input-label">Withdrawal Amount (Coins)</label>
+                <input class="amount-input" type="number" id="coinAmount" value="100" min="0" />
+                <span class="input-suffix pu-25">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                </span>
+            </div>
+            <p class="converted-value">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Converted Value: <strong id="convertedVal">Rp 10,000</strong>
+            </p>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-header">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                <span>Transaction Summary</span>
+            </div>
+            <div class="summary-row">
+                <span>Withdrawal Amount</span>
+                <span id="summaryAmount">Rp 10,000</span>
+            </div>
+            <div class="summary-row">
+                <span>Admin Fee</span>
+                <span class="fee-text" id="summaryFee">Rp 1,000</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-row net-row">
+                <span>Net Received</span>
+                <span class="net-amount" id="summaryNet">Rp 9,000</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="right-col">
+
+        <h2 class="section-title">Select Destination</h2>
+
+        <p class="destination-group-label">E-WALLETS</p>
+        <div class="destination-grid">
+
+            <button class="dest-btn active" data-dest="gopay">
+            <span class="dest-check">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <svg class="dest-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            <span>Gopay</span>
+            </button>
+
+            <button class="dest-btn" data-dest="ovo">
+            <span class="dest-check">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <svg class="dest-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            <span>OVO</span>
+            </button>
+
+            <button class="dest-btn" data-dest="dana">
+            <span class="dest-check">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <svg class="dest-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            <span>Dana</span>
+            </button>
+
+        </div>
+
+        <p class="destination-group-label">BANK TRANSFER</p>
+        <div class="destination-grid">
+
+            <button class="dest-btn" data-dest="bca">
+            <span class="dest-check">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <svg class="dest-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>
+            <span>BCA</span>
+            </button>
+
+            <button class="dest-btn" data-dest="mandiri">
+            <span class="dest-check">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <svg class="dest-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>
+            <span>Mandiri</span>
+            </button>
+
+            <button class="dest-btn" data-dest="bni">
+            <span class="dest-check">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <svg class="dest-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>
+            <span>BNI</span>
+            </button>
+
+        </div>
+
+        <button class="confirm-btn" onclick="">
+            Confirm Withdrawal
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+
+        </div>
+    </main>
+
+    <div class="notif-backdrop" id="notifBackdrop">
+    <div class="notif-modal" id="notifModal" role="dialog" aria-modal="true" aria-labelledby="notifTitle">
+ 
+      <div class="notif-state" id="stateLoading">
+        <div class="notif-spinner">
+          <svg width="52" height="52" viewBox="0 0 50 50" fill="none">
+            <circle cx="25" cy="25" r="20" stroke="#dde0f0" stroke-width="4"/>
+            <circle cx="25" cy="25" r="20" stroke="#1a1a8c" stroke-width="4"
+              stroke-dasharray="90 200" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p class="notif-loading-text">Processing your withdrawal...</p>
+      </div>
+ 
+      <div class="notif-state hidden" id="stateSuccess">
+        <div class="notif-icon-wrap success">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <h2 class="notif-title" id="notifTitle">Withdrawal Successful!</h2>
+        <p class="notif-subtitle">Your coins have been converted and sent to your selected destination.</p>
+ 
+        <div class="notif-detail-card">
+          <div class="notif-detail-row">
+            <span class="notif-detail-label">Destination</span>
+            <span class="notif-detail-value" id="notifDest">null</span>
+          </div>
+          <div class="notif-detail-row">
+            <span class="notif-detail-label">Withdrawal Amount</span>
+            <span class="notif-detail-value" id="notifAmount">null</span>
+          </div>
+          <div class="notif-detail-row">
+            <span class="notif-detail-label">Admin Fee</span>
+            <span class="notif-detail-value fee">Rp. 1.000</span>
+          </div>
+          <div class="notif-detail-divider"></div>
+          <div class="notif-detail-row net">
+            <span class="notif-detail-label">Net Received</span>
+            <span class="notif-detail-value net-val" id="notifNet">null</span>
+          </div>
+        </div>
+ 
+        <div class="notif-ref">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span id="notifTime"></span>
+        </div>
+ 
+        <div class="notif-actions">
+          <button class="notif-btn-secondary" id="notifClose">Back to Dashboard</button>
+          <button class="notif-btn-primary" id="notifNew">New Withdrawal</button>
+        </div>
+      </div>
+ 
+      <!-- Error State -->
+      <div class="notif-state hidden" id="stateError">
+        <div class="notif-icon-wrap error">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </div>
+        <h2 class="notif-title">Withdrawal Failed</h2>
+        <p class="notif-subtitle">Something went wrong while processing your request. Please try again.</p>
+        <div class="notif-actions">
+          <button class="notif-btn-secondary" id="notifErrorClose">Cancel</button>
+          <button class="notif-btn-primary" id="notifRetry">Try Again</button>
+        </div>
+      </div>
+ 
+    </div>
+  </div>
+    
+    <nav class="bottom-navbar">
+        <a class="bottom-nav-item" href="index.html" data-page="home">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+        </a>
+        <a class="bottom-nav-item active" href="upload.html" data-page="upload">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>        
+        </a>
+        <a class="bottom-nav-item" href="#" data-page="search">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+        </a>
+    </nav>
+    
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-overlay-inner">
+        <div class="search-overlay-bar">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Search documents..." id="mobileSearchInput" />
+            <button class="search-overlay-close" id="searchClose">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        </div>
+    </div>
+</body>
+</html>
