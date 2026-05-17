@@ -54,12 +54,13 @@ body {
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
-  padding: 0 32px;
+  padding: 14px 18px;
   height: 60px;
   gap: 32px;
   position: sticky;
   top: 0;
   z-index: 100;
+  justify-content: space-between;
 }
 
 .nav-logo {
@@ -97,6 +98,7 @@ body {
 .text-decor-none{
   text-decoration: none;
 }
+
 
 /* desktop search */
 .search-bar {
@@ -155,7 +157,6 @@ body {
 }
 .avatar:hover { background: var(--blue-light); }
 
-/* ── Page Layout ── */
 .page {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
@@ -362,7 +363,6 @@ body {
   margin-bottom: 20px;
 }
 
-/* ── Destination Buttons ── */
 .dest-btn {
   position: relative;
   background: var(--bg-white);
@@ -416,7 +416,6 @@ body {
   display: flex;
 }
 
-/* ── Confirm Button ── */
 .confirm-btn {
   margin-top: auto;
   width: 60%;
@@ -491,7 +490,6 @@ body {
   display: none;
 }
  
-/* Loading */
 .notif-spinner svg {
   animation: spin 0.9s linear infinite;
 }
@@ -507,7 +505,6 @@ body {
   margin-top: 8px;
 }
  
-/* Icon circle */
 .notif-icon-wrap {
   width: 72px;
   height: 72px;
@@ -534,7 +531,6 @@ body {
   box-shadow: 0 8px 24px rgba(239, 68, 68, 0.35);
 }
  
-/* Text */
 .notif-title {
   font-size: 20px;
   font-weight: 700;
@@ -549,7 +545,6 @@ body {
   max-width: 300px;
 }
  
-/* Detail card */
 .notif-detail-card {
   width: 100%;
   background: var(--summary-bg);
@@ -658,75 +653,8 @@ body {
   transform: scale(0.98);
 }
 
-.bottom-navbar {
-  display: none;
-}
- 
-/* ── Search Overlay ── */
-.search-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(26, 26, 140, 0.18);
-  z-index: 200;
-  align-items: flex-start;
-  padding-top: 0;
-}
- 
-.search-overlay.open {
-  display: flex;
-}
- 
-.search-overlay-inner {
-  width: 100%;
-  background: var(--bg-white);
-  border-bottom: 1px solid var(--border);
-  padding: 12px 16px;
-}
- 
-.search-overlay-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--bg-page);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 10px 14px;
-}
- 
-.search-overlay-bar svg:first-child {
-  color: var(--text-hint);
-  flex-shrink: 0;
-}
- 
-.search-overlay-bar input {
-  flex: 1;
-  background: none;
-  border: none;
-  outline: none;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 15px;
-  color: var(--text-primary);
-}
- 
-.search-overlay-bar input::placeholder {
-  color: var(--text-hint);
-}
- 
-.search-overlay-close {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  padding: 0;
-  flex-shrink: 0;
-}
- 
-.search-overlay-close:hover {
-  color: var(--navy);
-}
+
+
 
 .flex-col{
     flex-direction: column;

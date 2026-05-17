@@ -64,12 +64,13 @@ body {
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
-  padding: 0 32px;
+  padding: 14px 18px;
   height: 60px;
   gap: 32px;
   position: sticky;
   top: 0;
   z-index: 100;
+  justify-content: space-between;
 }
 
 .nav-logo {
