@@ -6,76 +6,33 @@
   "use strict";
 
   /* ── DOM References ─────────────────────────── */
+  const dropzone         = document.getElementById("dropzone");
+  const selectBtn        = document.getElementById("selectFileBtn");
+  const fileInput        = document.getElementById("fileInput");
+  const filePreview      = document.getElementById("filePreview");
+  const fileNameEl       = document.getElementById("fileName");
+  const removeBtn        = document.getElementById("removeFile");
+  const uploadBtn        = document.getElementById("uploadBtn");
+  const toastEl          = document.getElementById("toast");
 
-  // Navbar / Drawer
-  const hamburger     = document.getElementById("hamburger");
-  const mobileOverlay = document.getElementById("mobileOverlay");
-  const mobileDrawer  = document.getElementById("mobileDrawer");
-  const drawerClose   = document.getElementById("drawerClose");
+  const titleInput       = document.getElementById("titleInput");
+  const descInput        = document.getElementById("descInput");
+  const categorySelect   = document.getElementById("categorySelect");
+  const levelSelect      = document.getElementById("levelSelect");
+  const difficultySelect = document.getElementById("difficultySelect");
+  const tagsInput        = document.getElementById("tagsInput");
+  const priceInput       = document.getElementById("priceInput");
 
-  // Upload
-  const dropzone    = document.getElementById("dropzone");
-  const selectBtn   = document.getElementById("selectFileBtn");
-  const fileInput   = document.getElementById("fileInput");
-  const filePreview = document.getElementById("filePreview");
-  const fileNameEl  = document.getElementById("fileName");
-  const removeBtn   = document.getElementById("removeFile");
-  const uploadBtn   = document.getElementById("uploadBtn");
-  const toastEl     = document.getElementById("toast");
-
-  // Form fields
-  const titleInput     = document.getElementById("titleInput");
-  const descInput      = document.getElementById("descInput");
-  const categorySelect = document.getElementById("categorySelect");
-  const levelInput     = document.getElementById("levelInput");
-  const tagsInput      = document.getElementById("tagsInput");
-  const priceInput     = document.getElementById("priceInput");
+  const notifBackdrop    = document.getElementById("notifBackdrop");
+  const stateLoading     = document.getElementById("stateLoading");
+  const stateSuccess     = document.getElementById("stateSuccess");
 
   let selectedFile = null;
-
-  /* ══════════════════════════════════════════════
-     MOBILE DRAWER
-     ══════════════════════════════════════════════ */
-
-  // bottom navbar
-const bottomItems    = document.querySelectorAll('.bottom-nav-item');
-const searchOverlay  = document.getElementById('searchOverlay');
-const searchClose    = document.getElementById('searchClose');
-const mobileSearchInput = document.getElementById('mobileSearchInput');
- 
-bottomItems.forEach(item => {
-  item.addEventListener('click', (e) => {
-    e.preventDefault();
-    const page = item.dataset.page;
- 
-    if (page === 'search') {
-      searchOverlay.classList.add('open');
-      setTimeout(() => mobileSearchInput.focus(), 100);
-      return;
-    }
- 
-    bottomItems.forEach(b => b.classList.remove('active'));
-    item.classList.add('active');
-  });
-});
- 
-searchClose.addEventListener('click', () => {
-  searchOverlay.classList.remove('open');
-  mobileSearchInput.value = '';
-});
- 
-searchOverlay.addEventListener('click', (e) => {
-  if (e.target === searchOverlay) {
-    searchOverlay.classList.remove('open');
-    mobileSearchInput.value = '';
-  }
-});
+  let toastTimer   = null;
 
   /* ══════════════════════════════════════════════
      TOAST HELPER
      ══════════════════════════════════════════════ */
-  let toastTimer = null;
-
   function showToast(message, duration = 3000) {
     toastEl.textContent = message;
     toastEl.classList.add("show");
@@ -92,7 +49,7 @@ searchOverlay.addEventListener('click', (e) => {
     "image/png",
     "image/jpeg",
   ];
-  const MAX_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB
+  const MAX_SIZE_BYTES = 50 * 1024 * 1024;
 
   function validateFile(file) {
     if (!ALLOWED_TYPES.includes(file.type)) {
@@ -150,15 +107,12 @@ searchOverlay.addEventListener('click', (e) => {
   });
 
   /* ══════════════════════════════════════════════
-     DROPZONE CLICK
+     DROPZONE CLICK & DRAG-DROP
      ══════════════════════════════════════════════ */
   dropzone.addEventListener("click", () => {
     if (!selectedFile) fileInput.click();
   });
 
-  /* ══════════════════════════════════════════════
-     DRAG & DROP
-     ══════════════════════════════════════════════ */
   dropzone.addEventListener("dragover", (e) => {
     e.preventDefault();
     dropzone.classList.add("drag-over");
@@ -186,11 +140,51 @@ searchOverlay.addEventListener('click', (e) => {
   });
 
   /* ══════════════════════════════════════════════
+     MODAL HELPERS
+     ══════════════════════════════════════════════ */
+  function openModal() {
+    notifBackdrop.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    notifBackdrop.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  function showState(stateEl) {
+    [stateLoading, stateSuccess].forEach((s) => s.classList.add("hidden"));
+    stateEl.classList.remove("hidden");
+  }
+
+  /* ══════════════════════════════════════════════
+     CATEGORY LABEL MAP
+     ══════════════════════════════════════════════ */
+  const CAT_MAP = {
+    math:        "Mathematics",
+    science:     "Science",
+    engineering: "Engineering",
+    business:    "Business",
+    humanities:  "Humanities",
+    language:    "Language",
+    other:       "Other",
+  };
+
+  function getNow() {
+    return new Date().toLocaleString("id-ID", {
+      day: "2-digit", month: "short", year: "numeric",
+      hour: "2-digit", minute: "2-digit",
+    });
+  }
+
+  /* ══════════════════════════════════════════════
      UPLOAD BUTTON
      ══════════════════════════════════════════════ */
   uploadBtn.addEventListener("click", () => {
-    const title    = titleInput.value.trim();
-    const category = categorySelect.value;
+    const title      = titleInput.value.trim();
+    const category   = categorySelect.value;
+    const level      = levelSelect.value;
+    const difficulty = difficultySelect.value;
 
     if (!selectedFile) {
       showToast("⚠️ Please select a file to upload.");
@@ -206,61 +200,66 @@ searchOverlay.addEventListener('click', (e) => {
       categorySelect.focus();
       return;
     }
+    if (!level) {
+      showToast("⚠️ Please select a level / semester.");
+      levelSelect.focus();
+      return;
+    }
+    if (!difficulty) {
+      showToast("⚠️ Please select a difficulty.");
+      difficultySelect.focus();
+      return;
+    }
 
-    simulateUpload({ title, category });
+    const price = parseFloat(priceInput.value) || 0;
+
+    // Isi data ke success state
+    document.getElementById("notifDocTitle").textContent = title;
+    document.getElementById("notifCategory").textContent = CAT_MAP[category] || category;
+    document.getElementById("notifPrice").textContent    = price > 0 ? price + " Coins" : "Free";
+    document.getElementById("notifTime").textContent     = getNow();
+
+    // Tampilkan modal dengan state loading
+    showState(stateLoading);
+    openModal();
+
+    // Setelah 2 detik ganti ke success
+    setTimeout(() => {
+      showState(stateSuccess);
+    }, 2000);
   });
 
   /* ══════════════════════════════════════════════
-     SIMULATE UPLOAD
+     MODAL ACTION BUTTONS
      ══════════════════════════════════════════════ */
-  const originalUploadHTML = uploadBtn.innerHTML;
+  document.getElementById("notifClose").addEventListener("click", () => {
+    closeModal();
+    location.href = "index.html";
+  });
 
-  function simulateUpload(data) {
-    uploadBtn.disabled = true;
+  document.getElementById("notifNew").addEventListener("click", () => {
+    closeModal();
+    resetForm();
+    showToast("Form cleared. Ready for new upload!");
+  });
 
-    // Inject spinner keyframe once
-    if (!document.getElementById("spinKF")) {
-      const s = document.createElement("style");
-      s.id = "spinKF";
-      s.textContent = "@keyframes spin { to { transform: rotate(360deg); } }";
-      document.head.appendChild(s);
-    }
-
-    uploadBtn.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-        style="animation:spin 0.9s linear infinite;">
-        <line x1="12" y1="2"  x2="12" y2="6"/>
-        <line x1="12" y1="18" x2="12" y2="22"/>
-        <line x1="4.93" y1="4.93"   x2="7.76"  y2="7.76"/>
-        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/>
-        <line x1="2" y1="12"  x2="6"  y2="12"/>
-        <line x1="18" y1="12" x2="22" y2="12"/>
-        <line x1="4.93"  y1="19.07" x2="7.76"  y2="16.24"/>
-        <line x1="16.24" y1="7.76"  x2="19.07" y2="4.93"/>
-      </svg>
-      Uploading…
-    `;
-
-    setTimeout(() => {
-      uploadBtn.disabled = false;
-      uploadBtn.innerHTML = originalUploadHTML;
-      showToast(`🎉 "${data.title}" uploaded successfully!`, 4000);
-      resetForm();
-    }, 2200);
-  }
+  // Klik backdrop (area gelap) untuk tutup modal
+  notifBackdrop.addEventListener("click", (e) => {
+    if (e.target === notifBackdrop) closeModal();
+  });
 
   /* ══════════════════════════════════════════════
      RESET FORM
      ══════════════════════════════════════════════ */
   function resetForm() {
     clearFile();
-    titleInput.value     = "";
-    descInput.value      = "";
-    categorySelect.value = "";
-    levelInput.value     = "";
-    tagsInput.value      = "";
-    priceInput.value     = "";
+    titleInput.value       = "";
+    descInput.value        = "";
+    categorySelect.value   = "";
+    levelSelect.value      = "";
+    difficultySelect.value = "";
+    tagsInput.value        = "";
+    priceInput.value       = "";
   }
 
   /* ══════════════════════════════════════════════

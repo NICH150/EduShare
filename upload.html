@@ -6,7 +6,7 @@
   <title>EduShare – Upload</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="./style/upload.css" />
-  <script src="./script/upload.js"></script>
+  <script src="./script/upload.js" defer></script>
 </head>
 <body>
   
@@ -24,19 +24,16 @@
     </div>
   </nav>
 
-  <!--MOBILE HEADER-->
   <header class="mobile-header">
-  <a href="index.html" class="nav-logo text-decor-none">EduShare</a>
-  <a class="coin-badge text-decor-none" href="topup.html">
-    <div class="coin-dot"></div>
-    <p>25 Coins</p>
-  </a>
-</header>
+    <a href="index.html" class="nav-logo text-decor-none">EduShare</a>
+    <a class="coin-badge text-decor-none" href="topup.html">
+      <div class="coin-dot"></div>
+      <p>25 Coins</p>
+    </a>
+  </header>
 
-  <!-- MAIN CONTENT -->
   <main class="main-container">
 
-    <!-- LEFT: Upload Document -->
     <section class="upload-section">
       <h2 class="section-title">Upload Document</h2>
       <div class="dropzone" id="dropzone">
@@ -64,7 +61,6 @@
       </div>
     </section>
 
-    <!-- RIGHT: Material Details -->
     <section class="details-section">
       <h2 class="section-title">Material Details</h2>
 
@@ -94,7 +90,6 @@
         </div>
       </div>
 
-
       <div class="form-group">
         <div class="select-wrapper">
           <select class="form-input form-select" id="levelSelect">
@@ -111,10 +106,23 @@
       </div>
 
       <div class="form-group">
+        <div class="select-wrapper">
+          <select class="form-input form-select" id="difficultySelect">
+            <option value="" disabled selected>Difficulty</option>
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+          <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="form-group">
         <input type="text" class="form-input" id="tagsInput" placeholder="Tags (e.g. #Calculus, comma separated)" />
       </div>
 
-      <!-- Set Price -->
       <div class="form-group price-card">
         <div class="price-header">
           <span class="price-icon">
@@ -141,6 +149,64 @@
         Upload Now
       </button>
     </section>
+
+    <!-- POPUP NOTIFICATION -->
+    <div class="notif-backdrop" id="notifBackdrop">
+      <div class="notif-modal" id="notifModal" role="dialog" aria-modal="true" aria-labelledby="notifTitle">
+
+        <!-- State: Loading -->
+        <div class="notif-state" id="stateLoading">
+          <div class="notif-spinner">
+            <svg width="52" height="52" viewBox="0 0 50 50" fill="none">
+              <circle cx="25" cy="25" r="20" stroke="#dde0f0" stroke-width="4"/>
+              <circle cx="25" cy="25" r="20" stroke="#1a1a8c" stroke-width="4"
+                stroke-dasharray="90 200" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <p class="notif-loading-text">Processing your upload...</p>
+        </div>
+
+        <!-- State: Success -->
+        <div class="notif-state hidden" id="stateSuccess">
+          <div class="notif-icon-wrap success">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <h2 class="notif-title" id="notifTitle">Upload Successful!</h2>
+          <p class="notif-subtitle">Your document has been published and is now available for others.</p>
+
+          <!-- Detail Card -->
+          <div class="notif-detail-card">
+            <div class="notif-detail-row">
+              <span class="notif-detail-label">Title</span>
+              <span class="notif-detail-value" id="notifDocTitle">—</span>
+            </div>
+
+            <div class="notif-detail-row">
+              <span class="notif-detail-label">Category</span>
+              <span class="notif-detail-value" id="notifCategory">—</span>
+            </div>
+
+            <div class="notif-detail-row">
+              <span class="notif-detail-label">Price</span>
+              <span class="notif-detail-value" id="notifPrice">Free</span>
+            </div>
+          </div>
+
+          <div class="notif-ref">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span id="notifTime"></span>
+          </div>
+
+          <div class="notif-actions">
+            <button class="notif-btn-secondary" id="notifClose">Back to Dashboard</button>
+            <button class="notif-btn-primary" id="notifNew">New Upload</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
 
   </main>
 

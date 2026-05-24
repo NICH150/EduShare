@@ -6,7 +6,7 @@
 
 /* ─── DATA ─── */
 const PACKAGES = [
-  { coins: 3,   price: 1171},
+  { coins: 3,   price: 1171 },
   { coins: 5,   price: 1423 },
   { coins: 12,  price: 3323 },
   { coins: 19,  price: 5232 },
@@ -24,19 +24,19 @@ const PACKAGES = [
 
 const PAYMENT_METHODS = [
   {
-    id: 'ewallet',
+    id: 'E-Wallet',
     name: 'E-Wallet',
     sub: 'Gopay, OVO, Dana',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>`,
   },
   {
-    id: 'va',
+    id: 'Virtual-Account',
     name: 'Virtual Account',
     sub: 'BCA, Mandiri, BNI',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 2 7 22 7"/></svg>`,
   },
   {
-    id: 'card',
+    id: 'Card',
     name: 'Credit/Debit Card',
     sub: 'Visa, Mastercard',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>`,
@@ -48,6 +48,9 @@ let selectedPackageIndex = 7;
 let selectedMethodId     = null;
 let customAmount         = null;
 let currentBalance       = 25;
+
+/* ─── MODAL ELEMENTS (assigned in init) ─── */
+let notifBackdrop, stateLoading, stateSuccess, stateError;
 
 /* ─── UTILS ─── */
 const fmt = (n) =>
@@ -61,6 +64,29 @@ function showToast(msg, duration = 2800) {
   el.textContent = msg;
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), duration);
+}
+
+function getNow() {
+  return new Date().toLocaleString('id-ID', {
+    day: '2-digit', month: 'long', year: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+  }) + ' WIB';
+}
+
+/* ─── MODAL FUNCTIONS ─── */
+function openModal() {
+  notifBackdrop.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  notifBackdrop.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function showState(state) {
+  [stateLoading, stateSuccess, stateError].forEach(s => s.classList.add('hidden'));
+  state.classList.remove('hidden');
 }
 
 /* ─── RENDER PACKAGES ─── */
@@ -227,35 +253,68 @@ function initConfirmBtn() {
       ? customAmount
       : PACKAGES[selectedPackageIndex].coins;
 
-    currentBalance += coinsToAdd;
+    const totalPrice = customAmount !== null
+      ? Math.round((customAmount / 100) * 28000)
+      : PACKAGES[selectedPackageIndex].price;
 
-    document.getElementById('balance-display').textContent = currentBalance;
-    document.getElementById('nav-coins').textContent = currentBalance + ' Coins';
+    document.getElementById('notifPkg').textContent    = coinsToAdd + ' Coins';
+    document.getElementById('notifMethod').textContent = selectedMethodId;
+    document.getElementById('notifTotal').textContent  = fmt(totalPrice);
+    document.getElementById('notifNewBal').textContent = (currentBalance + coinsToAdd) + ' Coins';
+    document.getElementById('notifTime').textContent   = getNow();
 
-    const balanceEl = document.getElementById('balance-display');
-    balanceEl.style.color = '#f5a623';
-    setTimeout(() => { balanceEl.style.color = ''; }, 800);
+    showState(stateLoading);
+    openModal();
 
-    showToast(`✅ Top up berhasil! +${coinsToAdd} Coins ditambahkan.`);
+    setTimeout(() => {
+      currentBalance += coinsToAdd;
 
-    selectedPackageIndex = 7;
-    selectedMethodId = null;
-    customAmount = null;
-    document.getElementById('custom-amount').value = '';
+      document.getElementById('balance-display').textContent = currentBalance;
+      document.getElementById('nav-coins').textContent = currentBalance + ' Coins';
 
-    renderPackages();
-    renderPaymentMethods();
-    updateTotal();
+      const balanceEl = document.getElementById('balance-display');
+      balanceEl.style.color = '#f5a623';
+      setTimeout(() => { balanceEl.style.color = ''; }, 800);
+
+      selectedPackageIndex = 7;
+      selectedMethodId = null;
+      customAmount = null;
+      document.getElementById('custom-amount').value = '';
+
+      renderPackages();
+      renderPaymentMethods();
+      updateTotal();
+
+      showState(stateSuccess);
+    }, 1800);
+  });
+}
+
+/* ─── MODAL BUTTONS ─── */
+function initModalButtons() {
+  document.getElementById('notifClose').addEventListener('click', closeModal);
+  document.getElementById('notifNew').addEventListener('click', closeModal);
+  document.getElementById('notifErrorClose').addEventListener('click', closeModal);
+  document.getElementById('notifRetry').addEventListener('click', () => {
+    showState(stateLoading);
+    setTimeout(() => showState(stateSuccess), 1800);
+  });
+  notifBackdrop.addEventListener('click', (e) => {
+    if (e.target === notifBackdrop) closeModal();
   });
 }
 
 /* ─── INIT ─── */
-// ⚠️ initWithdrawBtn() dihapus — tombol withdraw adalah <a href="withdrawal.html">
-// sehingga navigasi berjalan secara native tanpa JS.
 (function init() {
+  notifBackdrop = document.getElementById('notifBackdrop');
+  stateLoading  = document.getElementById('stateLoading');
+  stateSuccess  = document.getElementById('stateSuccess');
+  stateError    = document.getElementById('stateError');
+
   renderPackages();
   renderPaymentMethods();
   updateTotal();
   initCustomAmount();
   initConfirmBtn();
+  initModalButtons();
 })();

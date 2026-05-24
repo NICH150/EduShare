@@ -9,6 +9,7 @@ const summaryNet      = document.getElementById('summaryNet');
 const destBtns        = document.querySelectorAll('.dest-btn');
 const coinInvent = document.getElementById('balance-number');
 const estimatedval = document.getElementById('estimated-value');
+const navCoins = document.getElementById('nav-coins');
 let availableCoins = parseInt(coinInvent.textContent);
 
 function formatRupiah(amount) {
@@ -18,6 +19,7 @@ function formatRupiah(amount) {
 function UpdateBalanceUI(){
   coinInvent.textContent = availableCoins;
   estimatedval.textContent = formatRupiah(availableCoins * COIN_RATE);
+  navCoins.textContent = availableCoins + ' Coins';
 }
 
 function updateSummary() {
@@ -144,11 +146,7 @@ notifBackdrop.addEventListener('click', (e) => {
   }
 });
 
-
-const bottomItems    = document.querySelectorAll('.bottom-nav-item');
-const searchOverlay  = document.getElementById('searchOverlay');
-const searchClose    = document.getElementById('searchClose');
-const mobileSearchInput = document.getElementById('mobileSearchInput');
+const bottomItems = document.querySelectorAll('.bottom-nav-item');
 
 bottomItems.forEach(item => {
   item.addEventListener('click', (e) => {
@@ -164,16 +162,4 @@ bottomItems.forEach(item => {
     bottomItems.forEach(b => b.classList.remove('active'));
     item.classList.add('active');
   });
-});
-
-searchClose.addEventListener('click', () => {
-  searchOverlay.classList.remove('open');
-  mobileSearchInput.value = '';
-});
-
-searchOverlay.addEventListener('click', (e) => {
-  if (e.target === searchOverlay) {
-    searchOverlay.classList.remove('open');
-    mobileSearchInput.value = '';
-  }
 });
