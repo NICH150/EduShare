@@ -1,10 +1,7 @@
-/* ═══════════════════════════════════════════
-   EDUSHARE – TOPUP PAGE  |  topup.js
-   ═══════════════════════════════════════════ */
+
 
 'use strict';
 
-/* ─── DATA ─── */
 const PACKAGES = [
   { coins: 3,   price: 1171 },
   { coins: 5,   price: 1423 },
@@ -43,16 +40,13 @@ const PAYMENT_METHODS = [
   },
 ];
 
-/* ─── STATE ─── */
 let selectedPackageIndex = 7;
 let selectedMethodId     = null;
 let customAmount         = null;
 let currentBalance       = 25;
 
-/* ─── MODAL ELEMENTS (assigned in init) ─── */
 let notifBackdrop, stateLoading, stateSuccess, stateError;
 
-/* ─── UTILS ─── */
 const fmt = (n) =>
   'Rp ' + Number(n).toLocaleString('id-ID').replace(/,/g, '.');
 
@@ -233,7 +227,45 @@ function initCustomAmount() {
   });
 }
 
-/* ─── CONFIRM TOP UP ─── */
+
+function showConfirmToast({ title, subtitle, onConfirm }) {
+  const existing = document.getElementById('confirmToast');
+  if (existing) existing.remove();
+
+  const t = document.createElement('div');
+  t.id = 'confirmToast';
+  t.className = 'c-toast';
+  t.innerHTML = `
+    <div class="toast-body">
+      <p class="toast-title">${title}</p>
+      <p class="toast-sub">${subtitle}</p>
+    </div>
+    <div class="toast-actions">
+      <button class="t-cancel" id="toastCancel">Cancel</button>
+      <button class="t-confirm" id="toastOk">Confirm</button>
+    </div>`;
+
+  document.getElementById('toastContainer').appendChild(t);
+  requestAnimationFrame(() => t.classList.add('show'));
+
+  const timer = setTimeout(() => dismissConfirmToast(t), 8000);
+
+  document.getElementById('toastCancel').onclick = () => {
+    clearTimeout(timer);
+    dismissConfirmToast(t);
+  };
+  document.getElementById('toastOk').onclick = () => {
+    clearTimeout(timer);
+    dismissConfirmToast(t);
+    onConfirm();
+  };
+}
+
+function dismissConfirmToast(el) {
+  el.classList.remove('show');
+  setTimeout(() => el?.remove(), 250);
+}
+
 function initConfirmBtn() {
   const btn = document.getElementById('confirm-btn');
 
@@ -257,39 +289,42 @@ function initConfirmBtn() {
       ? Math.round((customAmount / 100) * 28000)
       : PACKAGES[selectedPackageIndex].price;
 
-    document.getElementById('notifPkg').textContent    = coinsToAdd + ' Coins';
-    document.getElementById('notifMethod').textContent = selectedMethodId;
-    document.getElementById('notifTotal').textContent  = fmt(totalPrice);
-    document.getElementById('notifNewBal').textContent = (currentBalance + coinsToAdd) + ' Coins';
-    document.getElementById('notifTime').textContent   = getNow();
+    showConfirmToast({
+      title: `Top up ${coinsToAdd} coins?`,
+      subtitle: `${selectedMethodId} · ${fmt(totalPrice)}`,
+      onConfirm: () => {
+        document.getElementById('notifPkg').textContent    = coinsToAdd + ' Coins';
+        document.getElementById('notifMethod').textContent = selectedMethodId;
+        document.getElementById('notifTotal').textContent  = fmt(totalPrice);
+        document.getElementById('notifNewBal').textContent = (currentBalance + coinsToAdd) + ' Coins';
+        document.getElementById('notifTime').textContent   = getNow();
 
-    showState(stateLoading);
-    openModal();
+        showState(stateLoading);
+        openModal();
 
-    setTimeout(() => {
-      currentBalance += coinsToAdd;
+        setTimeout(() => {
+          currentBalance += coinsToAdd;
+          document.getElementById('balance-display').textContent = currentBalance;
+          document.getElementById('nav-coins').textContent = currentBalance + ' Coins';
 
-      document.getElementById('balance-display').textContent = currentBalance;
-      document.getElementById('nav-coins').textContent = currentBalance + ' Coins';
+          const balanceEl = document.getElementById('balance-display');
+          balanceEl.style.color = '#f5a623';
+          setTimeout(() => { balanceEl.style.color = ''; }, 800);
 
-      const balanceEl = document.getElementById('balance-display');
-      balanceEl.style.color = '#f5a623';
-      setTimeout(() => { balanceEl.style.color = ''; }, 800);
+          selectedPackageIndex = 7;
+          selectedMethodId = null;
+          customAmount = null;
+          document.getElementById('custom-amount').value = '';
 
-      selectedPackageIndex = 7;
-      selectedMethodId = null;
-      customAmount = null;
-      document.getElementById('custom-amount').value = '';
-
-      renderPackages();
-      renderPaymentMethods();
-      updateTotal();
-
-      showState(stateSuccess);
-    }, 1800);
+          renderPackages();
+          renderPaymentMethods();
+          updateTotal();
+          showState(stateSuccess);
+        }, 1800);
+      }
+    });
   });
 }
-
 /* ─── MODAL BUTTONS ─── */
 function initModalButtons() {
   document.getElementById('notifClose').addEventListener('click', closeModal);

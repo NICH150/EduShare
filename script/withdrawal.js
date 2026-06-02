@@ -87,11 +87,48 @@ function getNow() {
   }) + ' WIB';
 }
 
+function showConfirmToast({ title, subtitle, onConfirm }) {
+  const existing = document.getElementById('confirmToast');
+  if (existing) existing.remove();
+
+  const t = document.createElement('div');
+  t.id = 'confirmToast';
+  t.className = 'c-toast';
+  t.innerHTML = `
+    <div class="toast-body">
+      <p class="toast-title">${title}</p>
+      <p class="toast-sub">${subtitle}</p>
+    </div>
+    <div class="toast-actions">
+      <button class="t-cancel" id="toastCancel">Cancel</button>
+      <button class="t-confirm" id="toastOk">Confirm</button>
+    </div>`;
+
+  document.getElementById('toastContainer').appendChild(t);
+  requestAnimationFrame(() => t.classList.add('show'));
+
+  const timer = setTimeout(() => dismissConfirmToast(t), 8000);
+
+  document.getElementById('toastCancel').onclick = () => {
+    clearTimeout(timer);
+    dismissConfirmToast(t);
+  };
+  document.getElementById('toastOk').onclick = () => {
+    clearTimeout(timer);
+    dismissConfirmToast(t);
+    onConfirm();
+  };
+}
+
+function dismissConfirmToast(el) {
+  el.classList.remove('show');
+  setTimeout(() => el?.remove(), 250);
+}
+
 confirmBtn.addEventListener('click', () => {
   const coins = parseInt(coinAmountInput.value) || 0;
 
   if (coins <= 0 || coins > availableCoins) {
-    console.log("gagal " + availableCoins);
     coinAmountInput.focus();
     coinAmountInput.style.borderColor = '#dc2626';
     coinAmountInput.style.boxShadow = '0 0 0 3px rgba(220,38,38,0.12)';
@@ -104,25 +141,32 @@ confirmBtn.addEventListener('click', () => {
 
   const gross = coins * COIN_RATE;
   const net = Math.max(0, gross - ADMIN_FEE);
+  const dest = getActiveDest();
 
-  notifDest.textContent = getActiveDest();
-  notifAmount.textContent = formatRupiahNotif(gross);
-  notifNet.textContent = formatRupiahNotif(net);
-  notifTime.textContent = getNow();
+  showConfirmToast({
+    title: `Withdraw ${coins} coins to ${dest}?`,
+    subtitle: `Net received: ${formatRupiah(net)} after admin fee`,
+    onConfirm: () => {
+      notifDest.textContent   = dest;
+      notifAmount.textContent = formatRupiahNotif(gross);
+      notifNet.textContent    = formatRupiahNotif(net);
+      notifTime.textContent   = getNow();
 
-  showState(stateLoading);
-  openModal();
+      showState(stateLoading);
+      openModal();
 
-  setTimeout(() => {
-    const success = Math.random() > 0.15; 
-    if(success){
-      availableCoins -= coins;
-      UpdateBalanceUI();
-      showState(stateSuccess);
-    } else {
-      showState(stateError);
+      setTimeout(() => {
+        const success = Math.random() > 0.15;
+        if (success) {
+          availableCoins -= coins;
+          UpdateBalanceUI();
+          showState(stateSuccess);
+        } else {
+          showState(stateError);
+        }
+      }, 1800);
     }
-  }, 1800); 
+  });
 });
 
 document.getElementById('notifClose').addEventListener('click', closeModal);
